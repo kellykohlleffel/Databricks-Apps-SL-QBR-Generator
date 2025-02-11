@@ -250,7 +250,7 @@ with st.sidebar:
     
     view_type = st.selectbox(
         "View Type",
-        ["Executive View", "Technical View", "Customer Success View", "Sales View"]
+        ["Sales View", "Executive View", "Technical View", "Customer Success View"]
     )
     
     # Advanced Options
