@@ -1,0 +1,7 @@
+{
+    "name": "<your-app-name>",
+    "resources": {
+      "sql-warehouse": "<your-sql-warehouse-name>",
+      "model-serving": "<your-model-serving-endpoint>"
+    }
+}

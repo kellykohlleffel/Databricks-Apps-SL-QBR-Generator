@@ -1,0 +1,27 @@
+# Ignore environment configuration files
+.env
+token.txt
+
+# Ignore config files
+config.json
+
+# Ignore Python virtual environments
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore IDE and editor config files
+.vscode/
+.idea/
+
+
+.databricks
