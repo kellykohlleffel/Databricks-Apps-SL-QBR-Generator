@@ -1,0 +1,30 @@
+command: ["streamlit", "run", "app.py", "--server.port", "8000", "--server.address", "0.0.0.0"]
+
+env:
+  - name: DATABRICKS_SQL_HTTP_PATH
+    value: '/sql/1.0/warehouses/<your-warehouse-id>'
+  - name: DATABRICKS_SERVING_ENDPOINT_URL
+    value: 'https://<your-workspace-url>/serving-endpoints/<your-endpoint-name>/invocations'
+  - name: DATABRICKS_TOKEN
+    valueFrom: secret
+  - name: DATABRICKS_HOST
+    value: 'https://<your-workspace-url>'
+  - name: UC_CATALOG
+    value: '<your-catalog>'
+  - name: UC_SCHEMA
+    value: '<your-schema>'
+  - name: UC_TABLE
+    value: '<your-table>'
+  - name: PINECONE_API_KEY
+    valueFrom: secret-2
+  - name: PINECONE_INDEX_NAME
+    value: 'wine-embeddings'
+  - name: PINECONE_HOST
+    value: 'https://<your-pinecone-index>.svc.<your-environment>.pinecone.io'
+
+resources:
+  secret:
+    - name: 'databricks-app-secrets'
+      key: secret
+    - name: 'pinecone-secrets'
+      key: secret-2
