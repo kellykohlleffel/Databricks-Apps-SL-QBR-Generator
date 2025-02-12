@@ -228,10 +228,10 @@ insights to create instant, standardardized and actionable QBRs.
 
 # Sidebar Configuration
 with st.sidebar:
-    st.header("QBR Configuration")
+    st.header("QBR Preferences")
     
     # Business Settings
-    st.subheader("Business Settings")
+    st.subheader("Settings")
     
     # Company Selection
     companies_df = query_unity_catalog()
