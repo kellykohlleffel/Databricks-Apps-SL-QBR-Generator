@@ -3,7 +3,7 @@
         "pinecone_api_key": "<your-pinecone-api-key>"
     },
     "pinecone": {
-        "index_name": "wine-embeddings",
+        "index_name": "your_name-embeddings",
         "environment": "<your-pinecone-environment>",  // e.g., "gcp-starter"
         "host": "https://<your-index-name>-<your-project-id>.svc.<your-environment>.pinecone.io",
         "dimension": 384,  // Required for sentence-transformers/all-MiniLM-L6-v2

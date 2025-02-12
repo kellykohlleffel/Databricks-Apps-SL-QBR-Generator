@@ -229,10 +229,10 @@ insights to create instant, standardardized and actionable QBRs.
 # Sidebar Configuration
 with st.sidebar:
     st.header("QBR Preferences")
-    
+
     # Business Settings
     st.subheader("Settings")
-    
+
     # Company Selection
     companies_df = query_unity_catalog()
     selected_company = st.selectbox(
@@ -240,18 +240,18 @@ with st.sidebar:
         options=[""] + companies_df['company_name'].tolist(),
         help="Type to search for a specific company"
     )
-    
+
     # Template Selection
     template_type = st.selectbox(
         "QBR Template",
         ["Standard QBR", "Executive Summary Only", "Technical Deep Dive", "Customer Success Focus"]
     )
-    
+
     view_type = st.selectbox(
         "View Type",
         ["Sales View", "Executive View", "Technical View", "Customer Success View"]
     )
-    
+
     # Advanced Options
     with st.expander("Advanced Options"):
         use_historical = st.checkbox(
@@ -259,7 +259,7 @@ with st.sidebar:
             value=True,
             help="Use similar QBRs for enhanced insights"
         )
-        
+
         num_contexts = st.slider(
             "Number of similar QBRs to include",
             min_value=1,
@@ -268,14 +268,29 @@ with st.sidebar:
             help="Select how many similar QBRs to use for context"
         )
 
-    # Add spacing before logo
-    for _ in range(20):
+    # Add spacing before branding text
+    for _ in range(10):
         st.sidebar.write("")
 
-    # Add centered logo
-    url = 'https://i.imgur.com/QPgg4sN.png'
+    # Branding Text (Above the logo)
     st.sidebar.markdown(
-        f'<div style="display: flex; justify-content: center;"><img src="{url}" width="100"></div>',
+        "<h4 style='text-align: center; font-weight: normal;'>Fivetran | Pinecone | Databricks</h4>", 
+        unsafe_allow_html=True
+    )
+
+    # Add spacing before logo
+    for _ in range(1):
+        st.sidebar.write("")
+
+    # Correct logo URL from your app.py
+    logo_url = "https://i.imgur.com/ioN9AJ3.png"
+
+    st.sidebar.markdown(
+        f"""
+        <div style="display: flex; justify-content: center;">
+            <img src="{logo_url}" width="150">
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
