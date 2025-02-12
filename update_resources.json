@@ -1,5 +1,5 @@
 {
-    "name": "simple-travelapp-sl",
+    "name": "dbx-apps-sl-qbr-generators",
     "resources": {
       "sql-warehouse": "ts-databricks-azure-sql-serverless-demo",
       "model-serving": "databricks-meta-llama-3-1-405b-instruct"

@@ -18,7 +18,7 @@ env:
   - name: PINECONE_API_KEY
     valueFrom: secret-2
   - name: PINECONE_INDEX_NAME
-    value: 'wine-embeddings'
+    value: 'your_name-embeddings'
   - name: PINECONE_HOST
     value: 'https://<your-pinecone-index>.svc.<your-environment>.pinecone.io'
 
