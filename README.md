@@ -9,6 +9,8 @@ The app combines sales data, support data, product data, current metrics, and pr
 
 It also leverages vector similarity search for contextual relevance and provides predictable outputs covering executive summaries, business impact, product adoption, and strategic recommendations - all without requiring manual effort or presentation creation from the sales team or management team.
 
+![Enterprise QBR Generator](images/dbx_app_qbr.png)
+
 ## Features
 
 ### Overview
@@ -183,6 +185,8 @@ The application integrates several key components:
 - Dynamic rendering
 - Multiple view templates
 
+![Enterprise QBR Generator](images/qbr_arch.png)
+
 ## Prerequisites
 
 ### Required Accounts & Resources
@@ -216,6 +220,151 @@ sentence-transformers==2.2.2
 2. Import base files from template repository
 3. Configure local development environment (e.g. VS Code)
 
+## Directory Structure
+```
+DATABRICKS-APPS-SL-QBR-GENERATOR/
+├── .databricks/                    # Databricks sync snapshots
+├── .vscode/                        # VS Code settings
+├── images/                         # Screenshot references
+├── venv/                           # Virtual environment
+├── .gitattributes                  # Git attributes configuration
+├── .gitignore                      # Files to exclude from Git
+├── app.py                          # Main application code
+├── app.yaml                        # Databricks app configuration
+├── app.yaml.template               # Template for app configuration
+├── config.json                     # Application configuration
+├── config.json.template            # Template for app configuration
+├── README.md                       # Documentation
+├── requirements.txt                # Python dependencies
+├── test_connection.py              # Connection testing utility
+├── token.txt                       # Development tokens (not for production)
+├── update_resources.json           # Resource configuration
+└── update_resources.json.template  # Template for resource configuration
+```
+
+## Configuration Files
+
+The application uses three main configuration files. For security, template versions are provided and actual configuration files should never be committed to the repository.
+
+### .gitignore Setup
+```gitignore
+# Ignore sensitive configuration files
+config.json
+update_resources.json
+secret*.json
+
+# Keep templates
+!config.json.template
+!app.yaml.template
+!update_resources.json.template
+
+# Python and IDE specific ignores
+venv/
+__pycache__/
+.vscode/
+.databricks/
+```
+
+### app.yaml.template
+```yaml
+command: ["streamlit", "run", "app.py", "--server.port", "8000", "--server.address", "0.0.0.0"]
+
+env:
+  - name: DATABRICKS_SQL_HTTP_PATH
+    value: '/sql/1.0/warehouses/<your-warehouse-id>'
+  - name: DATABRICKS_SERVING_ENDPOINT_URL
+    value: 'https://<your-workspace-url>/serving-endpoints/<your-endpoint-name>/invocations'
+  - name: DATABRICKS_TOKEN
+    valueFrom: secret
+  - name: DATABRICKS_HOST
+    value: 'https://<your-workspace-url>'
+  - name: UC_CATALOG
+    value: '<your-catalog>'
+  - name: UC_SCHEMA
+    value: '<your-schema>'
+  - name: UC_TABLE
+    value: '<your-table>'
+  - name: PINECONE_API_KEY
+    valueFrom: secret-2
+  - name: PINECONE_INDEX_NAME
+    value: 'qbr-embeddings'
+  - name: PINECONE_HOST
+    value: 'https://<your-pinecone-index>.svc.<your-environment>.pinecone.io'
+
+resources:
+  secret:
+    - name: 'databricks-app-secrets'
+      key: secret
+    - name: 'pinecone-secrets'
+      key: secret-2
+```
+
+### config.json.template
+```json
+{
+    "api_keys": {
+        "pinecone_api_key": "<your-pinecone-api-key>"
+    },
+    "pinecone": {
+        "index_name": "qbr-embeddings",
+        "environment": "<your-pinecone-environment>",
+        "host": "https://<your-index-name>-<your-project-id>.svc.<your-environment>.pinecone.io",
+        "dimension": 384,
+        "metric": "cosine",
+        "cloud": "aws",
+        "region": "us-east-1",
+        "capacity_mode": "serverless"
+    },
+    "models": {
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+    }
+}
+```
+
+### update_resources.json.template
+```json
+{
+    "name": "<your-app-name>",
+    "resources": {
+      "sql-warehouse": "<your-sql-warehouse-name>",
+      "model-serving": "<your-model-serving-endpoint>"
+    }
+}
+```
+
+### Configuration Setup Steps
+
+1. Create your configuration files from templates:
+```bash
+cp app.yaml.template app.yaml
+cp config.json.template config.json
+cp update_resources.json.template update_resources.json
+```
+
+2. Update app.yaml:
+- Replace `<your-warehouse-id>` with SQL warehouse ID
+- Update workspace URL and endpoint details
+- Configure Unity Catalog values
+- Set Pinecone connection details
+
+3. Update config.json:
+- Add your Pinecone API key
+- Configure Pinecone environment settings
+- Verify region and cloud settings
+
+4. Update update_resources.json:
+- Set your Databricks app name
+- Configure warehouse and model serving endpoints
+
+5. Verify Configuration:
+```bash
+# Test Databricks connection
+python test_connection.py
+
+# Verify Pinecone setup
+python -c "from pinecone import Pinecone; pc = Pinecone(api_key='your_key'); print(pc.list_indexes())"
+```
+
 ### 2. Data Pipeline Setup
 
 #### Fivetran Configuration
@@ -232,6 +381,8 @@ sentence-transformers==2.2.2
      - Schema: accelerate_qbrs_sales (connector name)
      - Table: qbr_data (table in the industry database and sales schema)
 3. Set up incremental sync schedule
+
+![Enterprise QBR Generator](images/fivetran_connector.png)
 
 #### Source Systems Integration
 The QBR Generator is built from multiple enterprise systems through Fivetran connectors:
@@ -750,6 +901,21 @@ Cloud_Nexus       12
 3. Configure resources and settings
 4. Upload project files (`app.py` `app.yaml` `requirements.txt` `config.json`)
 4. Deploy and monitor
+
+#### Compute > Apps > dbx-apps-sl-qbr-generators
+![Enterprise QBR Generator](images/dbx_app_overview.png)
+
+#### Compute > Apps > dbx-apps-sl-qbr-generators > edit
+![Wine Country Visit Assistant](images/dbx_resource_config.png)
+
+#### Compute > Apps > dbx-apps-sl-qbr-generators > Deployment
+![Wine Country Visit Assistant](images/dbx_app_deployment_link.png)
+
+#### Compute > Apps > dbx-apps-sl-qbr-generators > Deployment Detail
+![Wine Country Visit Assistant](images/dbx_app_deployment_detail.png)
+
+#### Compute > Apps > dbx-apps-sl-qbr-generators > Run the App
+![Wine Country Visit Assistant](images/dbx_app_runtheapp.png)
 
 ## Troubleshooting Tips
 
