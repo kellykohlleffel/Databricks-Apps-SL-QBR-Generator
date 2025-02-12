@@ -97,42 +97,41 @@ def build_prompt(company_data, similar_contexts, template_type):
 
 def call_serving_endpoint(prompt):
     """Call Databricks Serving Endpoint"""
-    with st.spinner("Generating QBR..."):
-        try:
-            payload = {
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are an expert business analyst specializing in creating detailed, data-driven Quarterly Business Reviews."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
-            }
+    try:
+        payload = {
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are an expert business analyst specializing in creating detailed, data-driven Quarterly Business Reviews."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        }
 
-            headers = {
-                'Authorization': f'Bearer {DATABRICKS_TOKEN}',
-                'Content-Type': 'application/json'
-            }
+        headers = {
+            'Authorization': f'Bearer {DATABRICKS_TOKEN}',
+            'Content-Type': 'application/json'
+        }
 
-            response = requests.post(
-                DATABRICKS_SERVING_ENDPOINT_URL,
-                json=payload,
-                headers=headers,
-                timeout=60
-            )
-            
-            if response.status_code != 200:
-                st.error(f"❌ Error Response: {response.text}")
-                return None
+        response = requests.post(
+            DATABRICKS_SERVING_ENDPOINT_URL,
+            json=payload,
+            headers=headers,
+            timeout=90
+        )
 
-            return response.json()
-
-        except Exception as e:
-            st.error(f"❌ Error calling Serving Endpoint: {str(e)}")
+        if response.status_code != 200:
+            st.error(f"❌ Error Response: {response.text}")
             return None
+
+        return response.json()
+
+    except Exception as e:
+        st.error(f"❌ Error calling Serving Endpoint: {str(e)}")
+        return None
 
 def query_unity_catalog(company_name=None):
     """Query Unity Catalog with optional company filter"""
@@ -222,9 +221,9 @@ if 'reset_key' not in st.session_state:
 # Title and Description
 st.title("🎯 Enterprise QBR Generator")
 st.write("""
-Generate comprehensive, data-driven Quarterly Business Reviews using advanced analytics 
-and machine learning. This tool combines historical data, current metrics, and predictive
-insights to create actionable QBRs.
+Generate comprehensive, data-driven Quarterly Business Reviews using Fivetran, Pinecone, and Databricks.
+This Databricks Gen AI Data App combines sales data, support data, product data, current metrics, and predictive
+insights to create instant, standardardized and actionable QBRs.
 """)
 
 # Sidebar Configuration
@@ -268,6 +267,17 @@ with st.sidebar:
             value=5,
             help="Select how many similar QBRs to use for context"
         )
+
+    # Add spacing before logo
+    for _ in range(20):
+        st.sidebar.write("")
+
+    # Add centered logo
+    url = 'https://i.imgur.com/QPgg4sN.png'
+    st.sidebar.markdown(
+        f'<div style="display: flex; justify-content: center;"><img src="{url}" width="100"></div>',
+        unsafe_allow_html=True
+    )
 
 # Main Content Area
 tabs = st.tabs(["QBR Generation", "Historical QBRs", "Settings"])
@@ -313,13 +323,13 @@ with tabs[0]:
                         qbr_content = response_data['choices'][0]['message']['content']
                         token_metrics = response_data.get('usage', {})
                         
-                        # Display metrics
-                        st.write("### Generation Metrics")
-                        st.write(f"Total Tokens: {token_metrics.get('total_tokens', 'N/A')}")
-                        
                         # Display QBR
                         st.header(f"Quarterly Business Review: {selected_company}")
                         st.write(qbr_content)
+
+                        # Display metrics
+                        st.write("### Metrics")
+                        st.write(f"Total Tokens: {token_metrics.get('total_tokens', 'N/A')}")
                         
                         # Add download button
                         st.download_button(
