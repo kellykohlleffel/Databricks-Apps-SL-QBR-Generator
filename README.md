@@ -773,7 +773,7 @@ def sanitize_id(vector_id):
         vector_id = str(vector_id)
     return re.sub(r'[^a-zA-Z0-9_\-]', '_', vector_id)
 
-# 🚀 Change: Use `company_id` instead of `company_name` for unique IDs
+# Use `company_id` instead of `company_name` for unique IDs
 print("\nPreparing data...")
 df_pandas['id'] = df_pandas['company_id'].apply(sanitize_id)
 df_pandas['values'] = df_pandas['qbr_information'].apply(lambda x: get_embedding(x).tolist())
@@ -788,7 +788,7 @@ def upload_in_batches(df, batch_size=100):
         vectors = []
         for _, row in batch_df.iterrows():
             vector = {
-                'id': row['id'],  # ✅ Now using `company_id`
+                'id': row['id'],  # using `company_id`
                 'values': row['values'],  # The actual vector embeddings
                 'metadata': {'qbr_info': str(row['qbr_information'])}  # Store metadata for retrieval
             }
@@ -799,7 +799,7 @@ def upload_in_batches(df, batch_size=100):
             response = index.upsert(vectors=vectors)
             print(f"\nBatch {i//batch_size + 1} response: {response}")
 
-            # 🚀 Add a short delay to avoid hitting Pinecone's rate limits
+            # Add a short delay to avoid hitting Pinecone's rate limits
             time.sleep(2)  # Adjust delay if needed
             
         except Exception as e:
