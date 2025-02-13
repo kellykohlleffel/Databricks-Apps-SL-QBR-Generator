@@ -895,7 +895,9 @@ Cloud_Nexus       12
 ```bash
 # Install Databricks CLI
 pip install databricks-cli
+```
 
+```bash
 # Configure CLI with token
 databricks configure --token
 # Enter your workspace URL and access token when prompted
@@ -906,8 +908,9 @@ databricks configure --token
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-.\venv\Scripts\activate   # Windows
+```
 
+```bash
 # Install dependencies
 pip install -r requirements.txt
 ```
@@ -916,7 +919,9 @@ pip install -r requirements.txt
 ```bash
 # Sync code to workspace
 databricks sync --watch . /Workspace/Shared/dbx-apps-sl-qbr-generators-2
+```
 
+```bash
 # Deploy app
 databricks apps deploy simple-travelapp-sl --source-code-path /Workspace/Shared/dbx-apps-sl-qbr-generators-2
 ```
