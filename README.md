@@ -1,13 +1,13 @@
 # Enterprise QBR Generator
 
-The Enterprise QBR Generator transforms the traditional QBR process by automating the generation of standardized, data-driven business reviews using Fivetran, Pinecone and Databricks. The app addresses two critical challenges in sales organizations: 
+The Enterprise QBR Generator transforms the traditional QBR process by automating the generation of standardized, data-driven business reviews using Fivetran, Pinecone, and Databricks. The app addresses two critical challenges in sales organizations:
 
-1. Creating consistent, reliable QBR presentations for management 
-2. Eliminating the time-intensive QBR preparation process for account executives 
+1. Creating consistent, reliable QBR presentations for management
+2. Eliminating the time-intensive QBR preparation process for account executives
 
-The app combines sales data, support data, product data, current metrics, and predictive insights to create instant, standardardized and actionable QBRs through an intuitive interface. Users can customize outputs through multiple templates (Sales, Executive, Technical, Customer Success) while maintaining standardization across the organization. 
+The app combines sales data, support data, product data, current metrics, and predictive insights to create instant, standardized, and actionable QBRs through an intuitive interface. Users can customize outputs through multiple templates and view types while maintaining standardization across the organization.
 
-It also leverages vector similarity search for contextual relevance and provides predictable outputs covering executive summaries, business impact, product adoption, and strategic recommendations - all without requiring manual effort or presentation creation from the sales team or management team.
+The latest update enhances the QBR generation process by dynamically adjusting content structure based on both **QBR Type** and **View Type**. This ensures that each report is tailored to specific stakeholder needs, whether it's Sales, Executive, Technical, or Customer Success teams.
 
 ![Enterprise QBR Generator](images/dbx_app_qbr.png)
 
@@ -15,149 +15,108 @@ It also leverages vector similarity search for contextual relevance and provides
 
 ### Overview
 - **Automated QBR Generation**: Transform raw business data into comprehensive QBR presentations with one click
-- **Multiple View Types**: 
+- **Multiple View Types** (Now dynamically adjusts content based on selection):
   - Sales View
   - Executive View
   - Technical View
   - Customer Success View
-- **Customizable Templates**:
+- **Customizable Templates** (With content modifications based on template selection):
   - Standard QBR
   - Executive Summary Only
   - Technical Deep Dive
   - Customer Success Focus
+- **Dynamic Section Structuring**: The application now adapts the QBR structure based on the selected **View Type**, ensuring each report contains the most relevant insights.
 - **Interactive Metrics Dashboard**:
   - Health Score
   - Contract Value
   - CSAT Score
   - Active Users
-- **Advanced RAG Implementation**: 
+- **Advanced RAG Implementation**:
   - Pinecone vector search for semantic matching
   - Context-aware LLM responses
   - Historical QBR context inclusion
   - Metadata-enriched search results
 
-### Interactive Data App
-* Modern, intuitive Streamlit interface with tabs navigation
-* Dynamic company selection dropdown with auto-complete
-* Multiple QBR templates and view types
-* Real-time metrics display
-* Historical QBR viewing capability
-* Download functionality for generated QBRs
+### **View Type-Specific QBR Adjustments**
+The app dynamically structures the QBR based on the **selected View Type**, ensuring the most relevant sections are prioritized.
 
-### Core Metrics Dashboard
-* Real-time display of key performance indicators:
-  - Health Score calculation
-  - Contract Value tracking
-  - CSAT Score monitoring
-  - Active Users count
-* Visual representations using Streamlit metrics components
+| View Type | Primary Focus |
+|-----------|--------------|
+| **Sales View** | Revenue impact, expansion opportunities, deal health, and risk mitigation |
+| **Executive View** | High-level business outcomes, ROI analysis, strategic alignment |
+| **Technical View** | System architecture, integrations, API usage, feature adoption trends |
+| **Customer Success View** | Customer satisfaction, adoption blockers, training and enablement |
 
-### Template Customization
-* Multiple QBR templates:
-  - Standard QBR
-  - Executive Summary Only
-  - Technical Deep Dive
-  - Customer Success Focus
-* View type selection:
-  - Sales View
-  - Executive View
-  - Technical View
-  - Customer Success View
-* Advanced options for customization:
-  - Historical context inclusion
-  - Context depth control
-  - Template preferences
+The **QBR structure** is now dynamically generated as follows:
+
+- **Sales View**: Includes "Account Health Summary," "Revenue & Expansion Opportunities," "Competitive Positioning"
+- **Executive View**: Focuses on "Key Business Outcomes," "ROI & Financial Impact," "Strategic Roadmap Alignment"
+- **Technical View**: Provides "System Performance & API Usage," "Feature Adoption," "Engineering Challenges"
+- **Customer Success View**: Highlights "Customer Engagement Metrics," "Support Trends," "Success Strategy & Next Steps"
+
+This ensures that each stakeholder receives the insights most relevant to their role without unnecessary data clutter.
+
+### **Template-Specific QBR Adjustments**
+Each QBR type now also influences **content depth and focus**:
+
+| QBR Type | Key Adjustments |
+|----------|----------------|
+| **Standard QBR** | Covers all key aspects, including business impact, product adoption, and strategic recommendations |
+| **Executive Summary Only** | High-level overview, key wins, challenges, and strategic recommendations, without deep technical details |
+| **Technical Deep Dive** | Focuses on technical aspects such as system performance, API usage, and infrastructure considerations |
+| **Customer Success Focus** | Emphasizes adoption trends, support ticket patterns, and customer engagement strategies |
 
 ## Vector Search Implementation
 
 ### Embedding Generation
-* Uses sentence-transformers/all-MiniLM-L6-v2 model
-* Processes QBR data into unified text representations
-* Handles multiple data types and formats
-* Batch processing with error handling
-* Automatic retry logic for failed operations
+- Uses `sentence-transformers/all-MiniLM-L6-v2` model
+- Processes QBR data into unified text representations
+- Handles multiple data types and formats
+- Batch processing with error handling
+- Automatic retry logic for failed operations
 
 ### Pinecone Integration
-* Serverless vector database configuration
-* Cosine similarity search for relevant QBRs
-* Configurable search parameters:
-  - Number of similar QBRs (top_k)
+- Serverless vector database configuration
+- Cosine similarity search for relevant QBRs
+- Configurable search parameters:
+  - Number of similar QBRs (`top_k`)
   - Similarity threshold settings
   - Context window size
-* Metadata-enriched vector storage
-* Comprehensive verification system
+- Metadata-enriched vector storage
+- Comprehensive verification system
 
 ## LLM Integration
 
 ### Databricks Model Serving
-* Direct integration with Llama-3 405B model
-* System prompt optimized for business analysis
-* Support for multiple hosted model options:
+- Direct integration with `Llama-3 405B` model
+- System prompt optimized for business analysis
+- Support for multiple hosted model options:
   - Mixtral 8x7B
   - DBRX
   - Llama-3 70B
   - Llama-3 405B (default)
-  - Note: Databricks also supports bringing your own model (Open AI, Claude, etc.)
-* Request timeout set to 90 seconds
-* Token usage tracking and metrics
+  - Option to bring in other models (OpenAI, Claude, etc.)
+- Request timeout set to **90 seconds**
+- Token usage tracking and metrics
 
 ### Prompt Engineering
-* Context-aware prompt construction
-* Template-specific prompt optimization
-* Dynamic prompt adjustment based on view type
-* Historical context integration
-* Metadata utilization for enhanced responses
+- **Context-aware prompt construction**
+- **Dynamic structure based on View Type and QBR Type** (New)
+- **Historical context integration for enriched responses**
+- **Metadata utilization for enhanced personalization**
 
-## RAG Implementation
+## **How to Use the Updated QBR Generator**
 
-### Context Management
-* Retrieval Augmented Generation using Pinecone
-* Configurable number of similar QBRs (default: 5)
-* Intelligent context merging
-* Weighted relevance scoring
-* Source tracking for used information
+1. **Select a company** from the dropdown.
+2. **Choose QBR Type** (Standard QBR, Executive Summary, Technical Deep Dive, Customer Success Focus).
+3. **Choose View Type** (Sales, Executive, Technical, Customer Success) – this determines the report structure dynamically.
+4. **Enable Historical Context** (optional) for more contextually relevant insights.
+5. **Generate QBR** and view/download the results.
 
-### Response Generation
-* Structured QBR sections:
-  1. Executive Summary
-  2. Business Impact Analysis
-  3. Product Adoption Review
-  4. Support and Success Analysis
-  5. Strategic Recommendations
-  6. Action Items
-* Token usage tracking
-* Response formatting in markdown
-* Download options for generated content
-
-## Query Types
-
-### Standard QBR Generation
-* Comprehensive business review creation
-* Data-driven insights and analysis
-* Key metrics highlight
-* Strategic recommendations
-* Action item generation
-
-### Executive Summary Focus
-* High-level overview generation
-* Key performance indicators
-* Strategic insights
-* Risk assessment
-* Opportunity identification
-
-### Technical Deep Dive
-* Detailed product usage analysis
-* Feature adoption metrics
-* Technical integration status
-* Performance metrics
-* Infrastructure considerations
-
-### Customer Success View
-* Support metrics analysis
-* Customer satisfaction tracking
-* Usage pattern analysis
-* Success metrics evaluation
-* Engagement scoring
+## **Performance Considerations**
+- The QBR Generation prompts are complex. Expect results in **30-60 seconds**.
+- Read timeout is set at **90 seconds** to handle longer responses.
+- **Token limits are monitored**, and the prompt is dynamically adjusted to avoid exceeding model constraints.
 
 ## Architecture
 
