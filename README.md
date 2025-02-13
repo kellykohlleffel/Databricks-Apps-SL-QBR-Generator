@@ -890,31 +890,62 @@ Cloud_Nexus       12
 ### 4. App Deployment
 
 #### Option A: Local Development with VS Code + Databricks CLI
-1. Setup Databricks CLI and configure with token
-2. Clone repository and set up virtual environment
-3. Install dependencies and configure settings
-4. Deploy using Databricks CLI commands
+
+1. **Setup Databricks CLI**
+```bash
+# Install Databricks CLI
+pip install databricks-cli
+
+# Configure CLI with token
+databricks configure --token
+# Enter your workspace URL and access token when prompted
+```
+
+2. **Set Up Local Environment**
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+.\venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+3. **Deploy to Databricks**
+```bash
+# Sync code to workspace
+databricks sync --watch . /Workspace/Shared/dbx-apps-sl-qbr-generators-2
+
+# Deploy app
+databricks apps deploy simple-travelapp-sl --source-code-path /Workspace/Shared/dbx-apps-sl-qbr-generators-2
+```
 
 #### Option B: Direct Deployment through Databricks Apps UI
-1. Navigate to Apps in Databricks
-2. Create new custom app
-3. Configure resources and settings
-4. Upload project files (`app.py` `app.yaml` `requirements.txt` `config.json`)
-4. Deploy and monitor
+1. Navigate to Compute > Apps > Create App
+2. Select "Custom"
+3. Enter app name (e.g., "dbx-apps-sl-qbr-generators-2")
+4. Upload provided app.py and app.yaml files
+5. Configure Resources (**Edit** button and **"**Advanced settings**"** within the DBX app):
+   * Add SQL Warehouse
+   * Add Serving Endpoint
+   * Add Databricks Secret
+   * Add Pinecone Secret
+6. Deploy the app
 
-#### Compute > Apps > dbx-apps-sl-qbr-generators
+#### Compute > Apps > dbx-apps-sl-qbr-generators-2
 ![Enterprise QBR Generator](images/dbx_app_overview.png)
 
-#### Compute > Apps > dbx-apps-sl-qbr-generators > edit
+#### Compute > Apps > dbx-apps-sl-qbr-generators-2 > edit
 ![Wine Country Visit Assistant](images/dbx_resource_config.png)
 
-#### Compute > Apps > dbx-apps-sl-qbr-generators > Deployment
+#### Compute > Apps > dbx-apps-sl-qbr-generators-2 > Deployment
 ![Wine Country Visit Assistant](images/dbx_app_deployment_link.png)
 
-#### Compute > Apps > dbx-apps-sl-qbr-generators > Deployment Detail
+#### Compute > Apps > dbx-apps-sl-qbr-generators-2 > Deployment Detail
 ![Wine Country Visit Assistant](images/dbx_app_deployment_detail.png)
 
-#### Compute > Apps > dbx-apps-sl-qbr-generators > Run the App
+#### Compute > Apps > dbx-apps-sl-qbr-generators-2 > Run the App
 ![Wine Country Visit Assistant](images/dbx_app_runtheapp.png)
 
 ## Troubleshooting Tips

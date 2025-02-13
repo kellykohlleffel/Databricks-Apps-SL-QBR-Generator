@@ -159,6 +159,8 @@ def query_unity_catalog(company_name=None):
             cursor.execute(QUERY)
             result = cursor.fetchall()
 
+        connection.close()  # Explicitly close the connection after query execution
+
         if company_name:
             df = pd.DataFrame(result, columns=['company_name', 'company_id', 'qbr_information', 'metadata'])
         else:
