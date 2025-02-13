@@ -40,59 +40,118 @@ def get_embedding(text):
         embeddings = model(**inputs).last_hidden_state.mean(dim=1).squeeze().tolist()
     return embeddings
 
-def build_prompt(company_data, similar_contexts, template_type):
-    """Build prompt with RAG context using Pinecone"""
+def build_prompt(company_data, similar_contexts, template_type, view_type):
+    """Builds a prompt with RAG context using Pinecone, template modifications, and view-specific emphasis."""
+
+    # Define unique instructions for each QBR type
+    template_instructions = {
+        "Standard QBR": """
+        This is a full Quarterly Business Review (QBR) covering all key aspects, including health score analysis, adoption metrics, customer satisfaction, and strategic recommendations.
+        """,
+        "Executive Summary Only": """
+        This QBR should be concise and high-level, focusing only on key insights, major wins, critical challenges, and high-level recommendations.
+        Exclude deep technical details, adoption trends, and granular product feature analysis.
+        """,
+        "Technical Deep Dive": """
+        This QBR should focus on technical aspects such as system architecture, integrations, API usage, performance metrics, and technical challenges.
+        Prioritize technical success metrics, potential optimizations, and engineering recommendations.
+        Minimize business-level overviews and executive summaries.
+        """,
+        "Customer Success Focus": """
+        This QBR should emphasize customer engagement, product adoption, support trends, and user satisfaction.
+        Focus on training needs, adoption blockers, support ticket patterns, and customer success strategies.
+        Minimize in-depth technical or executive-level details.
+        """
+    }
+
+    # Define unique instructions for each View Type
+    view_type_instructions = {
+        "Sales View": """
+        This QBR should focus on revenue impact, upsell opportunities, contract value, expansion potential, and risk mitigation.
+        Prioritize key financial metrics, deal health, and strategic recommendations for account growth.
+        Minimize highly technical discussions unless relevant for deal positioning.
+        """,
+        "Executive View": """
+        This QBR should provide a high-level strategic overview, emphasizing business outcomes, financial impact, and alignment with company goals.
+        Keep details concise, use bullet points, and focus on key wins, challenges, and high-level recommendations.
+        Minimize operational or highly technical details.
+        """,
+        "Technical View": """
+        This QBR should provide a deep dive into system performance, architecture, integrations, and product adoption from a technical perspective.
+        Prioritize API usage, reliability metrics, infrastructure considerations, and upcoming technical improvements.
+        Minimize business-oriented insights unless relevant to product engineering.
+        """,
+        "Customer Success View": """
+        This QBR should focus on customer satisfaction, adoption trends, support tickets, training needs, and customer engagement.
+        Prioritize recommendations for improving retention, reducing churn, and addressing adoption blockers.
+        Minimize purely financial or highly technical content unless relevant for success strategy.
+        """
+    }
+
+    # Define dynamic section structures per View Type
+    view_based_sections = {
+        "Sales View": """
+        1. Account Health Summary  
+        2. Revenue & Expansion Opportunities  
+        3. Usage Trends & Adoption Insights  
+        4. Competitive Positioning  
+        5. Strategic Sales Recommendations  
+        """,
+        
+        "Executive View": """
+        1. Key Business Outcomes  
+        2. ROI & Financial Impact  
+        3. Adoption & Customer Engagement  
+        4. Strategic Roadmap Alignment  
+        5. High-Level Recommendations  
+        """,
+        
+        "Technical View": """
+        1. System Performance & API Usage  
+        2. Infrastructure & Security Considerations  
+        3. Feature Adoption & Implementation Status  
+        4. Engineering Challenges & Optimization Strategies  
+        5. Technical Roadmap & Upcoming Enhancements  
+        """,
+        
+        "Customer Success View": """
+        1. Customer Engagement & Satisfaction Metrics  
+        2. Product Adoption & User Retention  
+        3. Support Trends & Resolution Efficiency  
+        4. Training & Enablement Opportunities  
+        5. Customer Success Strategy & Next Steps  
+        """
+    }
+
+    # Get the instructions and section structure based on selection
+    qbr_type_instructions = template_instructions.get(template_type, "")
+    view_specific_instructions = view_type_instructions.get(view_type, "")
+    dynamic_sections = view_based_sections.get(view_type, "1. Executive Summary\n2. Business Impact\n3. Strategic Recommendations")
+
+    # Construct the final prompt with the selected QBR and View Type instructions
     prompt = f"""
     You are an expert business analyst creating a Quarterly Business Review (QBR). 
-    Generate a detailed {template_type} QBR using the following data and format:
+    Generate a {template_type} QBR using the following data and format:
+
+    {qbr_type_instructions}
+
+    {view_specific_instructions}
 
     Company Data:
     {company_data}
-    
+
     Historical Context:
     {similar_contexts if similar_contexts else 'No historical context available'}
+
+    Structure the QBR based on {view_type}, prioritizing the most relevant insights.
     
-    Please create a comprehensive QBR with these specific sections:
+    Use the following section structure:
+    {dynamic_sections}
 
-    1. Executive Summary
-    - Overall health assessment (use the health score provided)
-    - Key wins from this quarter (based on metrics)
-    - Critical challenges identified
-    - High-priority strategic recommendations
-
-    2. Business Impact Analysis
-    - ROI analysis based on current usage
-    - Analysis of efficiency gains/losses
-    - Identified business problems and their impact
-    - Value realization metrics
-
-    3. Product Adoption Review
-    - Detailed feature usage analysis
-    - Implementation progress report
-    - Analysis of adoption rates and trends
-    - Identified adoption blockers and solutions
-
-    4. Support and Success Analysis
-    - Support ticket trend analysis
-    - Resolution efficiency metrics
-    - Customer satisfaction analysis
-    - Outstanding issues and their business impact
-
-    5. Strategic Recommendations
-    - Expansion opportunities
-    - Risk mitigation strategies
-    - Training and enablement needs
-    - Product roadmap alignment recommendations
-
-    6. Action Items
-    - Specific tasks for both customer and vendor teams
-    - Clear implementation timeline
-    - Required resources and owners
-    - Expected outcomes and success metrics
-
-    Format the QBR professionally with clear section headers and bullet points for key items.
-    Include specific metrics and data points to support all observations and recommendations.
+    Format the QBR professionally with clear section headers and bullet points for key insights.
+    Prioritize the most relevant information for {view_type} and {template_type}.
     """
+
     return prompt
 
 def call_serving_endpoint(prompt):
@@ -331,7 +390,8 @@ with tabs[0]:
                     prompt = build_prompt(
                         company_data['qbr_information'].iloc[0],
                         similar_contexts,
-                        template_type
+                        template_type,
+                        view_type
                     )
                     
                     response_data = call_serving_endpoint(prompt)
