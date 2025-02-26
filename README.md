@@ -7,7 +7,7 @@ The Enterprise Quarterly Business Review (QBR) Generator transforms the traditio
 
 The app combines sales data, support data, product data, current metrics, and predictive insights to create instant, standardized, and actionable QBRs through an intuitive interface. Users can customize outputs through multiple templates and view types while maintaining standardization across the organization.
 
-The latest update enhances the QBR generation process by dynamically adjusting content structure based on both **QBR Type** and **View Type**. This ensures that each report is tailored to specific stakeholder needs, whether it's Sales, Executive, Technical, or Customer Success teams.
+Choose the type of QBR you want by selecting both **QBR Type** and **View Type**. This ensures that each QBR is tailored to specific stakeholder needs, whether it's Sales, Executive, Technical, or Customer Success teams.
 
 ![Enterprise QBR Generator](images/dbx_app_qbr.png)
 
@@ -15,17 +15,17 @@ The latest update enhances the QBR generation process by dynamically adjusting c
 
 ### Overview
 - **Automated QBR Generation**: Transform raw business data into comprehensive QBR presentations with one click
-- **Multiple View Types** (Now dynamically adjusts content based on selection):
+- **Multiple View Types** (Dynamically adjusts content based on selection):
   - Sales View
   - Executive View
   - Technical View
   - Customer Success View
-- **Customizable Templates** (With content modifications based on template selection):
+- **Customizable Templates** (Content modifications based on template selection):
   - Standard QBR
   - Executive Summary Only
   - Technical Deep Dive
   - Customer Success Focus
-- **Dynamic Section Structuring**: The application now adapts the QBR structure based on the selected **View Type**, ensuring each report contains the most relevant insights.
+- **Dynamic Section Structuring**: Adapts the QBR structure based on the selected **View Type**, ensuring each QBR contains the most relevant insights.
 - **Interactive Metrics Dashboard**:
   - Health Score
   - Contract Value
@@ -54,7 +54,7 @@ The **QBR structure** is now dynamically generated as follows:
 - **Technical View**: Provides "System Performance & API Usage," "Feature Adoption," "Engineering Challenges"
 - **Customer Success View**: Highlights "Customer Engagement Metrics," "Support Trends," "Success Strategy & Next Steps"
 
-This ensures that each stakeholder receives the insights most relevant to their role without unnecessary data clutter.
+This ensures that each stakeholder receives the insights most relevant to their role without unnecessary information.
 
 ### **Template-Specific QBR Adjustments**
 Each QBR type now also influences **content depth and focus**:
@@ -1030,7 +1030,7 @@ Required resources in Databricks Apps UI:
 - Refer to the **app.py** and **app.yaml** files
 
 ## Performance and Response Time Considerations
-* The QBR Generation prompts are complex. Expect your QBR to be returned in 30-45 seconds.
+* The QBR Generation prompts are complex. Expect your QBR to be returned in 30-60 seconds.
 * The read timeout in the app.py is set at 90 seconds.
 
 ## Contributing
@@ -1039,11 +1039,5 @@ Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
+3. Make your changes and document
 4. Submit a pull request
-
-Please ensure:
-- Code follows project style
-- Tests are included
-- Documentation is updated
-- Commit messages are clear
