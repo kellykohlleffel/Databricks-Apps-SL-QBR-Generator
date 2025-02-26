@@ -1,8 +1,8 @@
-# Enterprise QBR Generator
+# Enterprise Quarterly Business Review (QBR) Generator
 
-The Enterprise QBR Generator transforms the traditional QBR process by automating the generation of standardized, data-driven business reviews using Fivetran, Pinecone, and Databricks. The app addresses two critical challenges in sales organizations:
+The Enterprise Quarterly Business Review (QBR) Generator transforms the traditional sales organization QBR process by automating the generation of standardized, data-driven business reviews using Fivetran, Pinecone, and Databricks. The app addresses two critical challenges in all sales organizations:
 
-1. Creating consistent, reliable QBR presentations for management
+1. Creating consistent, reliable, standardized QBR presentations for sales management
 2. Eliminating the time-intensive QBR preparation process for account executives
 
 The app combines sales data, support data, product data, current metrics, and predictive insights to create instant, standardized, and actionable QBRs through an intuitive interface. Users can customize outputs through multiple templates and view types while maintaining standardization across the organization.
