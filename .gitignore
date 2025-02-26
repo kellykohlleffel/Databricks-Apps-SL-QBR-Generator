@@ -1,6 +1,7 @@
 # Ignore environment configuration files
 .env
 token.txt
+app.yaml
 
 # Ignore config files
 config.json
