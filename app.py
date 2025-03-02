@@ -23,6 +23,7 @@ PINECONE_API_KEY = os.environ["PINECONE_API_KEY"]
 UC_CATALOG = os.environ["UC_CATALOG"]
 UC_SCHEMA = os.environ["UC_SCHEMA"]
 UC_TABLE = os.environ["UC_TABLE"]
+DBX_ENDPOINT = os.environ.get("DBX_ENDPOINT", "databricks-meta-llama-3-1-405b-instruct")
 
 # Initialize Pinecone using environment variables
 pc = Pinecone(api_key=PINECONE_API_KEY)
@@ -273,6 +274,30 @@ def display_metrics_dashboard(metrics_data):
             delta=None
         )
 
+def search_similar_companies(query, top_k=3):
+    """Search for similar companies using semantic search"""
+    try:
+        # Get embedding for the query
+        query_embedding = get_embedding(query)
+        
+        # Search Pinecone
+        results = index.query(
+            vector=query_embedding,
+            top_k=top_k,
+            include_metadata=True
+        )
+        
+        # Format results
+        formatted_results = []
+        for match in results.matches:
+            if match.metadata and 'qbr_info' in match.metadata:
+                formatted_results.append(match.metadata['qbr_info'])
+        
+        return '\n\n---\n\n'.join(formatted_results) if formatted_results else None
+    except Exception as e:
+        st.error(f"Error during search: {str(e)}")
+        return None
+
 # Initialize session state
 if 'qbr_history' not in st.session_state:
     st.session_state.qbr_history = []
@@ -356,7 +381,7 @@ with st.sidebar:
     )
 
 # Main Content Area
-tabs = st.tabs(["QBR Generation", "Historical QBRs", "Settings"])
+tabs = st.tabs(["QBR Generation", "QBR History", "Settings"])
 
 with tabs[0]:
     if selected_company:
@@ -435,4 +460,27 @@ with tabs[1]:
 
 with tabs[2]:
     st.write("QBR Generation Settings")
-    st.write("Configure default templates, branding, and other settings here.")
+    
+    st.subheader("Databricks Settings")
+    st.write(f"**Catalog:** {UC_CATALOG}")
+    st.write(f"**Schema:** {UC_SCHEMA}")
+    st.write(f"**Model:** {DBX_ENDPOINT}")
+        
+    st.subheader("Pinecone Settings")
+    st.write(f"**Index:** {os.environ.get('PINECONE_INDEX_NAME', 'po-embeddings')}")
+    st.write(f"**Model:** {MODEL_NAME}")
+        
+    # Add test search box
+    st.subheader("Test Semantic Search")
+    test_query = st.text_input("Enter a search query to test Pinecone", 
+                            placeholder="E.g., Assembly Tech")
+    if test_query and st.button("Search"):
+        with st.spinner("Searching similar companies..."):
+            similar_companies = search_similar_companies(test_query, top_k=3)
+            if similar_companies:
+                st.success("Similar companies found!")
+                for i, company in enumerate(similar_companies.split('\n\n---\n\n')):
+                    with st.expander(f"Similar Company #{i+1}"):
+                        st.write(company)
+            else:
+                st.warning("No similar companies found.")

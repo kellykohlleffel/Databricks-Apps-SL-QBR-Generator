@@ -1033,6 +1033,43 @@ Required resources in Databricks Apps UI:
 * The QBR Generation prompts are complex. Expect your QBR to be returned in 30-60 seconds.
 * The read timeout in the app.py is set at 90 seconds.
 
+## Additional Features
+
+### QBR History (Main page)
+
+The QBR History tab serves as an audit trail and knowledge repository of all past analyses performed in the application. Key features include:
+
+- **Chronological Record**: Displays all previous analyses in reverse chronological order, with timestamps showing when each analysis was performed
+- **Expandable Details**: Each historical analysis can be expanded to reveal the complete insights, recommendations, and metrics from that analysis
+
+This feature is particularly valuable for tracking changes over time, comparing performance across different periods, and maintaining institutional knowledge about qbr patterns and trends.
+
+![Analysis History](images/analysis_history.png)
+
+### Settings (Main page)
+
+The Settings tab provides users with visibility into configuration details and testing capabilities for the application. Key features include:
+
+- **Databricks Configuration**: Displays current catalog, schema, and model settings being used to access qbr data
+- **Pinecone Configuration**: Shows the vector database index and embedding model configurations for semantic search
+- **Test Search Functionality**: Allows users to test the semantic search capabilities directly by entering queries and seeing matching companies
+- **Version Information**: Displays current versions of libraries and models being used in the application
+
+This tab helps to quickly verify configurations, troubleshoot connection issues, and test semantic search functionality without affecting the main analysis workflows.
+
+![Settings](images/settings.png)
+
+### Advanced Options (Sidebar)
+
+The Advanced Options expandable section in the sidebar provides users with control over the semantic search capabilities. Key features include:
+
+- **Retrieval-Augmented Generation**: Users can enable or disable the inclusion of similar qbrs in the analysis through the "Include Similar Purchase Orders" checkbox
+- **Context Control**: A slider allows users to specify how many similar qbrs should be included in the analysis context, with options ranging from 1 to 10
+
+These settings allow users to leverage the power of vector search to enhance the AI analysis with relevant historical qbr data, providing more context-aware insights.
+
+![Advanced Options](images/advanced_options.png)
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:

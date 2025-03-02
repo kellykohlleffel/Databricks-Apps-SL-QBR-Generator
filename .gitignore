@@ -1,10 +1,10 @@
 # Ignore environment configuration files
 .env
 token.txt
-app.yaml
 
 # Ignore config files
 config.json
+app.yaml
 
 # Ignore Python virtual environments
 venv/
