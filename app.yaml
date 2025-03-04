@@ -1,0 +1,30 @@
+command: ["streamlit", "run", "app.py", "--server.port", "8000", "--server.address", "0.0.0.0"]
+
+env:
+  - name: DATABRICKS_SQL_HTTP_PATH
+    value: '/sql/1.0/warehouses/aafaeaff93adefe4'
+  - name: DATABRICKS_SERVING_ENDPOINT_URL
+    value: 'https://adb-3043026989721781.1.azuredatabricks.net/serving-endpoints/databricks-meta-llama-3-1-405b-instruct/invocations'
+  - name: DATABRICKS_TOKEN
+    valueFrom: secret
+  - name: DATABRICKS_HOST
+    value: 'https://adb-3043026989721781.1.azuredatabricks.net'
+  - name: UC_CATALOG
+    value: 'ts-catalog-demo'
+  - name: UC_SCHEMA
+    value: 'accelerate_qbrs_sales'
+  - name: UC_TABLE
+    value: 'qbr_data_single_string'
+  - name: PINECONE_API_KEY
+    valueFrom: secret-2
+  - name: PINECONE_INDEX_NAME
+    value: 'qbr-embeddings'
+  - name: PINECONE_HOST
+    value: 'https://qbr-embeddings-j6q7id3.svc.aped-4627-b74a.pinecone.io'
+
+resources:
+  secret:
+    - name: 'databricks-app-secrets'
+      key: secret
+    - name: 'pinecone-secrets'
+      key: secret-2

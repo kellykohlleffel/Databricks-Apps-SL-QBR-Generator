@@ -10,7 +10,12 @@ import time
 from transformers import AutoTokenizer, AutoModel
 
 # Set page config - MUST be the first Streamlit command
-st.set_page_config(layout="wide", page_title="Enterprise QBR Generator")
+st.set_page_config(
+    page_title="Enterprise QBR Generator",
+    page_icon="🎯",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Retrieve credentials from environment variables
 DATABRICKS_HOST = os.environ["DATABRICKS_HOST"]
