@@ -4,6 +4,7 @@ token.txt
 
 # Ignore config files
 config.json
+app.yaml
 
 # Ignore Python virtual environments
 venv/
